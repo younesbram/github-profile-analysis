@@ -4,122 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub Profile AI Analysis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #2196F3;
             --secondary-color: #FFC107;
-            --background-color: #FFFFFF;
+            --background-color: #F0F0F0;
             --text-color: #333333;
-            --card-bg: #f0f0f0;
-            --font-main: 'Roboto', sans-serif;
-            --font-secondary: 'VT323', monospace;
+            --card-background: #FFFFFF;
         }
 
         body {
-            font-family: var(--font-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
             margin: 0;
             padding: 0;
-            transition: all 0.5s ease;
+            transition: all 0.3s ease;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 20px;
             position: relative;
         }
 
         h1 {
-            font-size: 2.5em;
             text-align: center;
-            margin-bottom: 30px;
             color: var(--primary-color);
-            transition: all 0.5s ease;
+            font-size: 2.5em;
+            margin-bottom: 30px;
         }
 
         input, button {
             display: block;
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid var(--primary-color);
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 16px;
             border-radius: 5px;
-            font-size: 1em;
-            font-family: var(--font-main);
-            transition: all 0.3s ease;
-        }
-
-        input {
-            background-color: var(--background-color);
-            color: var(--text-color);
+            border: 1px solid #ddd;
         }
 
         button {
             background-color: var(--primary-color);
             color: white;
+            border: none;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background-color: #1976D2;
         }
 
         #result {
-            background-color: var(--card-bg);
+            background-color: var(--card-background);
             border-radius: 10px;
-            padding: 20px;
+            padding: 30px;
             margin-top: 30px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        #result.visible {
-            opacity: 1;
-            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         #avatar {
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            margin: 0 auto 20px;
             display: block;
-            border: 3px solid var(--primary-color);
-            transition: all 0.5s ease;
+            margin: 0 auto 20px;
+            border: 5px solid var(--primary-color);
         }
 
         .stats-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
+            margin-top: 20px;
         }
 
         .stat {
             width: 48%;
-            margin-bottom: 20px;
-            background-color: var(--background-color);
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .stat:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            background-color: var(--card-background);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .stat-label {
             font-weight: bold;
             margin-bottom: 5px;
-            color: var(--primary-color);
         }
 
         .stat-bar {
@@ -136,63 +110,15 @@
             transition: width 1s ease-out;
         }
 
-        .analysis {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: var(--background-color);
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .analysis:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        #fun-fact {
-            margin-top: 20px;
-            font-style: italic;
-            color: var(--secondary-color);
-            text-align: center;
-            font-size: 1.1em;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease 0.5s;
-        }
-
-        #fun-fact.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        #loading {
-            display: none;
-            text-align: center;
-            font-size: 1.5em;
-            margin-top: 20px;
-        }
-
-        .error {
-            color: #f44336;
-            text-align: center;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        #rice-mode-toggle {
+        #rice-mode {
             position: fixed;
             top: 20px;
             right: 20px;
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: 36px;
             cursor: pointer;
             z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        #rice-mode-toggle:hover {
-            transform: scale(1.2) rotate(20deg);
         }
 
         /* RICE MODE Styles */
@@ -200,127 +126,110 @@
             --primary-color: #00ff00;
             --secondary-color: #ff00ff;
             --background-color: #000000;
-            --text-color: #00ff00;
-            --card-bg: #111111;
-            font-family: var(--font-secondary);
+            --text-color: #ffffff;
+            --card-background: #111111;
+            font-family: 'Courier New', monospace;
         }
 
-        .rice-mode #result {
-            background-color: var(--card-bg);
-            box-shadow: 0 0 10px var(--primary-color);
-        }
-
-        .rice-mode .stat {
-            background-color: var(--card-bg);
-            box-shadow: 0 0 5px var(--primary-color);
+        .rice-mode #result, .rice-mode .stat {
+            background-color: var(--card-background);
         }
 
         .rice-mode h1 {
             text-shadow: 0 0 10px var(--primary-color);
-            animation: glow 1.5s ease-in-out infinite alternate;
         }
 
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 5px var(--primary-color), 0 0 10px var(--primary-color);
-            }
-            to {
-                text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 30px var(--primary-color);
-            }
+        #loading {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
         }
 
-        .rice-mode #avatar {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 20px var(--primary-color);
+        .error {
+            color: #f44336;
+            text-align: center;
+            font-weight: bold;
         }
 
-        .rice-mode input {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border-color: var(--primary-color);
+        .analysis {
+            margin-top: 30px;
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .rice-mode button {
-            background-color: var(--primary-color);
-            color: var(--background-color);
+        .analysis h3, .analysis h4 {
+            color: var(--primary-color);
         }
 
-        .rice-mode .analysis {
-            background-color: var(--card-bg);
-            box-shadow: 0 0 10px var(--secondary-color);
+        .user-info {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        @keyframes matrix-rain {
-            0% {
-                transform: translateY(-100%);
-            }
-            100% {
-                transform: translateY(100%);
-            }
+        .user-info h2 {
+            margin: 10px 0;
         }
 
-        .rice-mode::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(0deg, rgba(0, 255, 0, 0) 0%, rgba(0, 255, 0, 0.2) 75%, rgba(0, 255, 0, 0) 100%);
-            pointer-events: none;
-            animation: matrix-rain 20s linear infinite;
-            z-index: -1;
+        .user-info p {
+            margin: 5px 0;
         }
 
-        @media (max-width: 600px) {
-            .stat {
-                width: 100%;
-            }
+        .grade {
+            font-size: 72px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--primary-color);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <button id="rice-mode-toggle" title="Toggle RICE MODE">🏴‍☠️</button>
-
     <div class="container">
         <h1>GitHub Profile AI Analysis</h1>
         
         <form id="analyze-form">
-            <input type="text" id="username" placeholder="Enter GitHub username (e.g., younesbram)" required>
+            <input type="text" id="username" placeholder="Enter GitHub username" required>
             <button type="submit">Analyze</button>
         </form>
 
-        <div id="loading">Analyzing... 🧠💻</div>
+        <div id="loading" style="display:none;">Analyzing...</div>
 
         <div id="result"></div>
-        <div id="fun-fact"></div>
     </div>
 
-    <script>
-        const riceToggle = document.getElementById('rice-mode-toggle');
-        const body = document.body;
-        const form = document.getElementById('analyze-form');
-        const usernameInput = document.getElementById('username');
-        const resultDiv = document.getElementById('result');
-        const loadingDiv = document.getElementById('loading');
-        const funFactDiv = document.getElementById('fun-fact');
+    <button id="rice-mode" title="Toggle RICE MODE">🏴‍☠️</button>
 
-        riceToggle.addEventListener('click', () => {
-            body.classList.toggle('rice-mode');
-            if (body.classList.contains('rice-mode')) {
-                riceToggle.textContent = '🏴‍☠️🍚';
-            } else {
-                riceToggle.textContent = '🏴‍☠️';
-            }
+    <script>
+        // RICE MODE toggle
+        document.getElementById('rice-mode').addEventListener('click', () => {
+            document.body.classList.toggle('rice-mode');
         });
 
-        form.addEventListener('submit', async (e) => {
+        // Form submission handler
+        document.getElementById('analyze-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = usernameInput.value;
+            const username = document.getElementById('username').value;
+            const resultDiv = document.getElementById('result');
+            const loadingDiv = document.getElementById('loading');
+
             loadingDiv.style.display = 'block';
             resultDiv.innerHTML = '';
-            resultDiv.classList.remove('visible');
-            funFactDiv.classList.remove('visible');
 
             try {
                 const userData = await fetchGitHubData(username);
@@ -328,21 +237,20 @@
                 const analysis = analyzeProfile(userData, repoData);
                 displayResults(analysis);
             } catch (error) {
-                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
-                resultDiv.classList.add('visible');
+                resultDiv.innerHTML = <div class="error">Error: ${error.message}</div>;
             } finally {
                 loadingDiv.style.display = 'none';
             }
         });
 
         async function fetchGitHubData(username) {
-            const response = await fetch(`https://api.github.com/users/${username}`);
+            const response = await fetch(https://api.github.com/users/${username});
             if (!response.ok) throw new Error('GitHub user not found');
             return await response.json();
         }
 
         async function fetchRepoData(username) {
-            const response = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
+            const response = await fetch(https://api.github.com/users/${username}/repos);
             if (!response.ok) throw new Error('Unable to fetch repository data');
             return await response.json();
         }
@@ -370,9 +278,7 @@
             const topLanguages = Object.entries(languageStats)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 3)
-                .map(([lang, count]) => ({ name: lang, count: count }));
-
-            const commitFrequency = repoData.reduce((sum, repo) => sum + repo.pushed_at, 0) / repoData.length;
+                .map(([lang, count]) => ${lang} (${count}));
 
             return {
                 username: userData.login,
@@ -382,6 +288,7 @@
                 location: userData.location,
                 blog: userData.blog,
                 company: userData.company,
+                twitter_username: userData.twitter_username,
                 scores: scores,
                 overallScore: overallScore,
                 grade: getGrade(overallScore),
@@ -391,8 +298,6 @@
                 largestRepo: repoData.reduce((largest, repo) => repo.size > largest.size ? repo : largest, { size: 0 }),
                 oldestRepo: repoData.reduce((oldest, repo) => new Date(repo.created_at) < new Date(oldest.created_at) ? repo : oldest, { created_at: new Date() }),
                 newestRepo: repoData.reduce((newest, repo) => new Date(repo.created_at) > new Date(newest.created_at) ? repo : newest, { created_at: new Date(0) }),
-                commitFrequency: commitFrequency,
-                collaborationScore: Math.min(repoData.filter(repo => repo.fork).length * 5, 100),
             };
         }
 
@@ -406,8 +311,69 @@
         }
 
         function displayResults(analysis) {
-            resultDiv.innerHTML = `
-                <img id="avatar" src="${analysis.avatar}" alt="${analysis.username}'s avatar">
-                <h2>${analysis.name || analysis.username}</h2>
-                <p>${analysis.bio || 'No bio available'}</p>
-                <p>Location: ${analysis.location
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 
+                <div class="user-info">
+                    <img id="avatar" src="${analysis.avatar}" alt="${analysis.username}'s avatar">
+                    <h2>${analysis.name || analysis.username}</h2>
+                    <p>${analysis.bio || 'No bio available'}</p>
+                    <p>Location: ${analysis.location || 'Not specified'}</p>
+                    <p>Website: ${analysis.blog ? <a href="${analysis.blog}" target="_blank">${analysis.blog}</a> : 'Not specified'}</p>
+                    <p>Company: ${analysis.company || 'Not specified'}</p>
+                    <div class="social-links">
+                        <a href="https://github.com/${analysis.username}" target="_blank">GitHub Profile</a>
+                        ${analysis.twitter_username ? <a href="https://twitter.com/${analysis.twitter_username}" target="_blank">Twitter Profile</a> : ''}
+                    </div>
+                </div>
+                <div class="grade">
+                    Grade: ${analysis.grade}
+                </div>
+                <div class="stats-container">
+                    ${Object.entries(analysis.scores).map(([key, value]) => 
+                        <div class="stat">
+                            <div class="stat-label">${key.charAt(0).toUpperCase() + key.slice(1)}</div>
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width: ${value}%"></div>
+                            </div>
+                        </div>
+                    ).join('')}
+                </div>
+                <div class="analysis">
+                    <h3>AI Analysis</h3>
+                    <p>Overall GitHub Awesomeness Score: ${analysis.overallScore.toFixed(2)}/100</p>
+                    <p>${generateAnalysis(analysis)}</p>
+                    <h4>Language Proficiency:</h4>
+                    <p>Top languages: ${analysis.topLanguages.join(', ')}</p>
+                    <h4>Repository Insights:</h4>
+                    <p>Total Stars: ${analysis.totalStars}</p>
+                    <p>Total Forks: ${analysis.totalForks}</p>
+                    <p>Largest Repository: ${analysis.largestRepo.name} (${analysis.largestRepo.size} KB)</p>
+                    <p>Oldest Repository: ${analysis.oldestRepo.name} (Created: ${new Date(analysis.oldestRepo.created_at).toLocaleDateString()})</p>
+                    <p>Newest Repository: ${analysis.newestRepo.name} (Created: ${new Date(analysis.newestRepo.created_at).toLocaleDateString()})</p>
+                </div>
+            ;
+
+            // Animate the stat bars
+            setTimeout(() => {
+                document.querySelectorAll('.stat-fill').forEach(bar => {
+                    bar.style.width = bar.parentElement.offsetWidth * (parseInt(bar.style.width) / 100) + 'px';
+                });
+            }, 100);
+        }
+
+        function generateAnalysis(analysis) {
+            const phrases = [
+                ${analysis.username} is ${analysis.grade === 'S' ? 'absolutely crushing it' : 'doing great'} on GitHub!,
+                With ${analysis.scores.repos} repositories, they're ${analysis.scores.repos > 50 ? 'a coding machine' : 'building a solid portfolio'}.,
+                ${analysis.scores.followers} followers? ${analysis.scores.followers > 50 ? 'They\'re practically a GitHub celebrity!' : 'Their network is growing nicely.'},
+                They're following ${analysis.scores.following} users - ${analysis.scores.following > 50 ? 'talk about staying connected!' : 'steadily expanding their circle.'},
+                ${analysis.scores.stars} stars on their projects? ${analysis.scores.stars > 50 ? 'People love their work!' : 'They\'re gaining recognition.'},
+                With an account age score of ${analysis.scores.accountAge.toFixed(1)}, they're ${analysis.scores.accountAge > 50 ? 'a seasoned GitHub veteran' : 'building a solid presence over time'}.,
+                Their most used language appears to be ${analysis.topLanguages[0].split(' ')[0]}, showing a clear specialty.
+            ];
+
+            return phrases.join(' ');
+        }
+    </script>
+</body>
+</html>
